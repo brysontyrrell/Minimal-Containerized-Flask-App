@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  web:
+    restart: always
+    build: ./web
+    expose:
+      - "5000"
+    networks:
+      - proxy
+    command: ["uwsgi", "--ini", "/etc/uwsgi/apps-enabled/web-app.ini"]
+
+  nginx:
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - proxy
+    depends_on:
+      - web
+
+networks:
+  proxy:
+    driver: bridge
